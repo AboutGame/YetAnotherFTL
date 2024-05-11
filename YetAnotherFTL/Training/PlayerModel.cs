@@ -49,15 +49,16 @@ public class PlayerModel
             bidding = keras.layers.Dense(1, keras.activations.Sigmoid).Apply(bidding);
             
             var input = new Tensors([nextAction, bidAction, state, moveHistory]);
-            Console.WriteLine(string.Join(", ", input[0].shape.dims));
-            Console.WriteLine(string.Join(", ", input[1].shape.dims));
-            Console.WriteLine(string.Join(", ", input[2].shape.dims));
-            Console.WriteLine(string.Join(", ", input[3].shape.dims));
             var output = new Tensors([playing, bidding]);
             Model = keras.Model(input, output);
-            Model.summary();
+            // Model.summary();
             Model.compile(keras.optimizers.RMSprop(), keras.losses.MeanSquaredError());
         }
+    }
+
+    public NDArray SimplePredicate(NDArray arr)
+    {
+        return Model.predict(arr).numpy();
     }
 
     public void Learn(Dictionary<Tuple<PlayerState, int>, float> bidding, 
